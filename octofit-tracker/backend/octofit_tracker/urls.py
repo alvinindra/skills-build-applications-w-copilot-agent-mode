@@ -19,6 +19,7 @@ from rest_framework import routers
 from . import views
 from rest_framework.response import Response
 from rest_framework.decorators import api_view
+import os
 
 router = routers.DefaultRouter()
 router.register(r'users', views.UserViewSet)
@@ -27,14 +28,17 @@ router.register(r'activities', views.ActivityViewSet)
 router.register(r'workouts', views.WorkoutViewSet)
 router.register(r'leaderboards', views.LeaderboardViewSet)
 
+CODESPACE_NAME = os.getenv('CODESPACE_NAME')
+BASE_URL = f"https://{CODESPACE_NAME}-8000.app.github.dev/api" if CODESPACE_NAME else "http://localhost:8000/api"
+
 @api_view(['GET'])
 def api_root(request, format=None):
     return Response({
-        'users': request.build_absolute_uri('users/'),
-        'teams': request.build_absolute_uri('teams/'),
-        'activities': request.build_absolute_uri('activities/'),
-        'workouts': request.build_absolute_uri('workouts/'),
-        'leaderboards': request.build_absolute_uri('leaderboards/'),
+        'users': f"{BASE_URL}/users/",
+        'teams': f"{BASE_URL}/teams/",
+        'activities': f"{BASE_URL}/activities/",
+        'workouts': f"{BASE_URL}/workouts/",
+        'leaderboards': f"{BASE_URL}/leaderboards/",
     })
 
 urlpatterns = [
